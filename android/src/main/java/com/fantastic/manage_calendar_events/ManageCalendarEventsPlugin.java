@@ -182,40 +182,4 @@ public class ManageCalendarEventsPlugin implements FlutterPlugin, ActivityAware,
         }
         operations.addAttendees(eventId, attendees);
     }
-
-    @Override
-    public void onAttachedToEngine(@NonNull FlutterPluginBinding binding) {
-        this.binding = binding;
-        this.channel = new MethodChannel(binding.getBinaryMessenger(),
-                "manage_calendar_events");
-        channel.setMethodCallHandler(this);
-    }
-
-    @Override
-    public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
-        this.channel.setMethodCallHandler(null);
-        this.channel = null;
-    }
-
-    @Override
-    public void onAttachedToActivity(@NonNull ActivityPluginBinding binding) {
-        Activity activity = binding.getActivity();
-        this.operations = new CalendarOperations(activity, this.binding.getApplicationContext());
-    }
-
-    @Override
-    public void onDetachedFromActivityForConfigChanges() {
-        this.operations = null;
-    }
-
-    @Override
-    public void onReattachedToActivityForConfigChanges(@NonNull ActivityPluginBinding binding) {
-       Activity activity = binding.getActivity();
-       this.operations = new CalendarOperations(activity, this.binding.getApplicationContext());
-    }
-
-    @Override
-    public void onDetachedFromActivity() {
-        this.operations = null;
-    }
 }
