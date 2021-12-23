@@ -12,4 +12,7 @@ example/ios/Podfile
 .dart_tool
 .flutter-plugins-dependencies
 Flutter.podspec
+example/ios/Flutter/flutter_export_environment.sh
 .fvm/
+example/pubspec.lock
+android/gradle/wrapper/gradle-wrapper.properties
