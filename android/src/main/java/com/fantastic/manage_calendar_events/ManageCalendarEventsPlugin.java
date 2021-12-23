@@ -3,6 +3,8 @@ package com.fantastic.manage_calendar_events;
 import android.app.Activity;
 import android.content.Context;
 
+import androidx.annotation.NonNull;
+
 import com.fantastic.manage_calendar_events.models.Calendar;
 import com.fantastic.manage_calendar_events.models.CalendarEvent;
 import com.google.gson.Gson;
@@ -11,6 +13,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import io.flutter.embedding.engine.plugins.FlutterPlugin;
+import io.flutter.embedding.engine.plugins.activity.ActivityAware;
+import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
@@ -20,38 +25,21 @@ import io.flutter.plugin.common.PluginRegistry.Registrar;
 /**
  * ManageCalendarEventsPlugin
  */
-public class ManageCalendarEventsPlugin implements MethodCallHandler {
+public class ManageCalendarEventsPlugin implements FlutterPlugin, ActivityAware, MethodCallHandler {
 
-    private final MethodChannel methodChannel;
-    private final CalendarOperations operations;
+    private CalendarOperations operations;
     private final Gson gson = new Gson();
+    private FlutterPluginBinding binding;
+    private MethodChannel channel;
 
-    public ManageCalendarEventsPlugin(MethodChannel methodChannel, CalendarOperations operations) {
-        this.methodChannel = methodChannel;
-        this.methodChannel.setMethodCallHandler(this);
-
-        this.operations = operations;
-    }
-
-    /**
-     * Plugin registration.
-     */
-    public static void registerWith(Registrar registrar) {
-        Context context = registrar.context();
-        Activity activity = registrar.activity();
-
-
-        CalendarOperations CalendarOperations = new CalendarOperations(activity, context);
-
-        final MethodChannel channel = new MethodChannel(registrar.messenger(),
-                "manage_calendar_events");
-        channel.setMethodCallHandler(new ManageCalendarEventsPlugin(channel, CalendarOperations));
-
-        // registrar.addRequestPermissionsResultListener(CalendarOperations);
-    }
 
     @Override
     public void onMethodCall(MethodCall call, Result result) {
+        if(operations == null && !call.method.equals("getPlatformVersion")) {
+            result.error("99999", "CalendarOperation is not initialized", null);
+            return;
+        }
+
         if (call.method.equals("getPlatformVersion")) {
             result.success("Android " + android.os.Build.VERSION.RELEASE);
         } else if (call.method.equals("hasPermissions")) {
@@ -138,4 +126,39 @@ public class ManageCalendarEventsPlugin implements MethodCallHandler {
         operations.addAttendees(eventId, attendees);
     }
 
+    @Override
+    public void onAttachedToEngine(@NonNull FlutterPluginBinding binding) {
+        this.binding = binding;
+        this.channel = new MethodChannel(binding.getBinaryMessenger(),
+                "manage_calendar_events");
+        channel.setMethodCallHandler(this);
+    }
+
+    @Override
+    public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
+        this.channel.setMethodCallHandler(null);
+        this.channel = null;
+    }
+
+    @Override
+    public void onAttachedToActivity(@NonNull ActivityPluginBinding binding) {
+        Activity activity = binding.getActivity();
+        this.operations = new CalendarOperations(activity, this.binding.getApplicationContext());
+    }
+
+    @Override
+    public void onDetachedFromActivityForConfigChanges() {
+        this.operations = null;
+    }
+
+    @Override
+    public void onReattachedToActivityForConfigChanges(@NonNull ActivityPluginBinding binding) {
+       Activity activity = binding.getActivity();
+       this.operations = new CalendarOperations(activity, this.binding.getApplicationContext());
+    }
+
+    @Override
+    public void onDetachedFromActivity() {
+        this.operations = null;
+    }
 }
