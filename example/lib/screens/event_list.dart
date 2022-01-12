@@ -72,7 +72,7 @@ class _EventListState extends State<EventList> {
                   ),
                 ),
                 child: ListTile(
-                  title: Text(event.title!),
+                  title: Text(event.title ?? ''),
                   subtitle: Text(event.startDate!.toIso8601String()),
                   onTap: () {
                     Navigator.push(
