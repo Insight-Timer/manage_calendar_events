@@ -149,7 +149,7 @@ class _EventDetailsState extends State<EventDetails> {
   _addAttendee(String eventId) async {
     var number = Random().nextInt(100);
     var newAttendee = Attendee(
-        emailAddress: 'attendee$number@gmail.com', name: 'Attendee$number');
+        emailAddress: 'attendee$number@example.com', name: 'Attendee$number');
     await widget.calendarPlugin
         .addAttendees(eventId: eventId, newAttendees: [newAttendee]);
   }
