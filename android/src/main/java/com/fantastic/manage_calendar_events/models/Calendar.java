@@ -11,12 +11,15 @@ public final class Calendar {
   private final String accountName;
   @SerializedName("ownerName")
   private final String ownerName;
+  @SerializedName("isReadOnly")
+  private final boolean isReadOnly;
 
-  public Calendar(String id, String name, String accountName, String ownerName) {
+  public Calendar(String id, String name, String accountName, String ownerName, boolean isReadOnly) {
     this.id = id;
     this.name = name;
-    this.accountName = name;
-    this.ownerName = name;
+    this.accountName = accountName;
+    this.ownerName = ownerName;
+    this.isReadOnly = isReadOnly;
   }
 
   public String getId() {
@@ -35,10 +38,17 @@ public final class Calendar {
     return ownerName;
   }
 
+  public Boolean getIsReadOnly() {
+    return isReadOnly;
+  }
+
   @Override
   public String toString() {
     return new StringBuffer().append(id).append("-").append(name).append("-").append(accountName)
         .append("-")
-        .append(ownerName).toString();
+        .append(ownerName)
+        .append("-")
+        .append(isReadOnly)
+        .toString();
   }
 }

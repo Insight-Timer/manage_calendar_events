@@ -104,7 +104,20 @@ public class CalendarOperations {
                         .getString(cur.getColumnIndex(Calendars.ACCOUNT_NAME));
                 String ownerName = cur
                         .getString(cur.getColumnIndex(Calendars.OWNER_ACCOUNT));
-                Calendar calendar = new Calendar(calenderId, displayName, accountName, ownerName);
+                final int accessLevel = cur.getInt(cur.getColumnIndex(Calendars.CALENDAR_ACCESS_LEVEL));
+                final boolean isReadOnly;
+                switch (accessLevel) {
+                    case Calendars.CAL_ACCESS_OWNER:
+                    case Calendars.CAL_ACCESS_EDITOR:
+                    case Calendars.CAL_ACCESS_CONTRIBUTOR:
+                    case Calendars.CAL_ACCESS_ROOT:
+                        isReadOnly = false;
+                        break;
+                    default:
+                        isReadOnly = true;
+                        break;
+                }
+                Calendar calendar = new Calendar(calenderId, displayName, accountName, ownerName, isReadOnly);
                 calendarList.add(calendar);
             }
         } catch (Exception e) {

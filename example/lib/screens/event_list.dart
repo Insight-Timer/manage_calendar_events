@@ -72,7 +72,7 @@ class _EventListState extends State<EventList> {
                   ),
                 ),
                 child: ListTile(
-                  title: Text(event.title!),
+                  title: Text(event.title ?? ''),
                   subtitle: Text(event.startDate!.toIso8601String()),
                   onTap: () {
                     Navigator.push(
@@ -140,8 +140,8 @@ class _EventListState extends State<EventList> {
       url: 'https://www.google.com',
       attendees: Attendees(
         attendees: [
-          Attendee(emailAddress: 'test1@gmail.com', name: 'Test1'),
-          Attendee(emailAddress: 'test2@gmail.com', name: 'Test2'),
+          Attendee(emailAddress: 'test1@example.com', name: 'Test1'),
+          Attendee(emailAddress: 'test2@example.com', name: 'Test2'),
         ],
       ),
     );
@@ -167,7 +167,7 @@ class _EventListState extends State<EventList> {
     event.description = 'Test description is updated now';
     event.attendees = Attendees(
       attendees: [
-        Attendee(emailAddress: 'updatetest@gmail.com', name: 'Update Test'),
+        Attendee(emailAddress: 'updatetest@example.com', name: 'Update Test'),
       ],
     );
     _myPlugin
