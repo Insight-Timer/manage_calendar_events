@@ -167,8 +167,8 @@ public class SwiftManageCalendarEventsPlugin: NSObject, FlutterPlugin {
     private func requestPermissions() {
         eventStore.requestAccess(to: .event, completion: { [weak self]
             (accessGranted: Bool, error: Error?) in
-            if accessGranted, let weakSelf = self {
-                weakSelf.eventStore =  EKEventStore()
+            if accessGranted, let self = self {
+                self.eventStore =  EKEventStore()
             }
             print("Access Granted")
         })
