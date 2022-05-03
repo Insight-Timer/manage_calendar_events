@@ -7,7 +7,7 @@ extension Date {
 }
 
 public class SwiftManageCalendarEventsPlugin: NSObject, FlutterPlugin {
-    let eventStore = EKEventStore()
+    var eventStore = EKEventStore()
 
     struct Calendar: Codable {
         let id: String
@@ -165,8 +165,11 @@ public class SwiftManageCalendarEventsPlugin: NSObject, FlutterPlugin {
     }
 
     private func requestPermissions() {
-        eventStore.requestAccess(to: .event, completion: {
+        eventStore.requestAccess(to: .event, completion: { [weak self]
             (accessGranted: Bool, error: Error?) in
+            if accessGranted, let self = self {
+                self.eventStore =  EKEventStore()
+            }
             print("Access Granted")
         })
     }
