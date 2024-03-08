@@ -22,6 +22,9 @@ rootProject.allprojects {
 apply plugin: 'com.android.library'
 
 android {
+    if (project.android.hasProperty("namespace")) {
+        namespace 'com.fantastic.manage_calendar_events'
+    }
     compileSdkVersion 30
 
     compileOptions {
